@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: inherit;
+}
+
+.audience_input {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.audience_button {
+  height: 40px;
+}

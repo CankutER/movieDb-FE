@@ -1,3 +1,9 @@
+import AudienceCard from "../components/Audience/audience";
+
 export function AudiencePage() {
-  return "this is audience page";
+  return (
+    <div>
+      <AudienceCard />
+    </div>
+  );
 }
