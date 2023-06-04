@@ -14,6 +14,7 @@ export function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formState);
+    console.log("BBBB ", loginInfo);
     setIsLoading(true);
     try {
       const resp = await fetch(`${API_URL}/login`, {
