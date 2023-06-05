@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LogoutButton } from "../components/logout";
 export const API_URL = "http://localhost:3000/director";
 
 export function DirectorPage() {
@@ -126,6 +127,7 @@ export function DirectorPage() {
         >
           Add Predecessor
         </button>
+        <LogoutButton />
       </div>
       {showAddMovie && (
         <section className="d-grid vw-100 vh-100 justify-content-center align-content-center ">

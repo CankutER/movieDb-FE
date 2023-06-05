@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LogoutButton } from "../components/logout";
 export const API_URL = "http://localhost:3000/manager";
 
 export function ManagerPage() {
@@ -24,7 +25,6 @@ export function ManagerPage() {
   const [isClicked, setIsClicked] = useState({});
 
   useEffect(() => {
-    console.log("AAA ", loginInfo);
     if (!loginInfo?.isLoggedIn) {
       navigate(`/`);
     } else if (loginInfo?.role !== "admin") {
@@ -35,7 +35,7 @@ export function ManagerPage() {
   useEffect(() => {
     const warningTime = setTimeout(() => {
       setWarning("");
-    }, 1500);
+    }, 2000);
     return () => clearTimeout(warningTime);
   }, [warning]);
 
@@ -102,12 +102,18 @@ export function ManagerPage() {
           fName: formState.firstName,
           lName: formState.lastName,
         })
+        .then((response) => {
+          setWarning(response.data);
+        })
         .catch((response) => {
           throw new Error(response.response.data);
         });
+
+      setFormState({});
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
+      setFormState({});
       setWarning(err.message);
       console.log(err.message);
     }
@@ -116,17 +122,20 @@ export function ManagerPage() {
   const handleDeleteAudience = async (e) => {
     try {
       e.preventDefault();
-      console.log("BBBBBB ", formState.username);
       const id = formState.username;
       setIsLoading(true);
       const response = await axios
         .delete(`${API_URL}/deleteAudience/${id}`)
+        .then((response) => {
+          setWarning(response.data);
+        })
         .catch((response) => {
           throw new Error(response.response.data);
         });
-
+      setFormState({});
       setIsLoading(false);
     } catch (err) {
+      setFormState({});
       setIsLoading(false);
       setWarning(err.message);
       console.log(err.message);
@@ -136,7 +145,6 @@ export function ManagerPage() {
   const handleUpdatePlatformId = async (e) => {
     try {
       e.preventDefault();
-      console.log("BBBBBB ", formState.username);
       const id = formState.username;
       const platformId = formState.platformId;
       setIsLoading(true);
@@ -144,12 +152,16 @@ export function ManagerPage() {
         .put(`${API_URL}/updatePlatform/${id}`, {
           platformId: platformId,
         })
+        .then((response) => {
+          setWarning(response.data);
+        })
         .catch((response) => {
           throw new Error(response.response.data);
         });
       setFormState({});
       setIsLoading(false);
     } catch (err) {
+      setFormState({});
       setIsLoading(false);
       setWarning(err.message);
       console.log(err.message);
@@ -168,8 +180,8 @@ export function ManagerPage() {
         .catch((response) => {
           throw new Error(response.response.data);
         });
-      console.log("direktorlerr ", response.data);
       setAllDirectors(response.data);
+
       setIsLoading(false);
       setShowDirectors(!showDirectors);
     } catch (err) {
@@ -190,10 +202,11 @@ export function ManagerPage() {
         });
 
       setRatingsOfAudience(response.data);
-
+      setFormState({});
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
+      setFormState({});
       setRatingsOfAudience([]);
       setWarning(err.message);
       console.log(err.message);
@@ -246,76 +259,82 @@ export function ManagerPage() {
   return (
     <div>
       <div className={`d-flex`}>
-        <button
-          className={
-            !isClicked.addAudience
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowAddAudience}
-        >
-          Add Audience
-        </button>
-        <button
-          className={
-            !isClicked.deleteAudience
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowDeleteAudience}
-        >
-          Delete Audience
-        </button>
-        <button
-          className={
-            !isClicked.updatePlatform
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowPlatform}
-        >
-          Update Platform Id
-        </button>
-        <button
-          className={
-            !isClicked.showDirectorsButton
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleFetchDirectors}
-        >
-          Show Directors
-        </button>
-        <button
-          className={
-            !isClicked.ratingsOfAudienceButton
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowRatingsOfAudience}
-        >
-          Show Ratings of a Audience
-        </button>
-        <button
-          className={
-            !isClicked.moviesOfDirector
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowMoviesOfDirector}
-        >
-          Show Movies of a Director
-        </button>
-        <button
-          className={
-            !isClicked.averageRatingOfMovieButton
-              ? "btn btn-primary mx-auto"
-              : "btn btn-secondary mx-auto"
-          }
-          onClick={handleShowAverageRatingOfMovie}
-        >
-          Show Average Rating of a Movie
-        </button>
+        <div>
+          <button
+            className={
+              !isClicked.addAudience
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowAddAudience}
+          >
+            Add Audience
+          </button>
+          <button
+            className={
+              !isClicked.deleteAudience
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowDeleteAudience}
+          >
+            Delete Audience
+          </button>
+          <button
+            className={
+              !isClicked.updatePlatform
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowPlatform}
+          >
+            Update Platform Id
+          </button>
+
+          <button
+            className={
+              !isClicked.showDirectorsButton
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleFetchDirectors}
+          >
+            Show Directors
+          </button>
+          <button
+            className={
+              !isClicked.ratingsOfAudienceButton
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowRatingsOfAudience}
+          >
+            Show Ratings of a Audience
+          </button>
+          <button
+            className={
+              !isClicked.moviesOfDirector
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowMoviesOfDirector}
+          >
+            Show Movies of a Director
+          </button>
+          <button
+            className={
+              !isClicked.averageRatingOfMovieButton
+                ? "btn btn-primary mx-auto"
+                : "btn btn-secondary mx-auto"
+            }
+            onClick={handleShowAverageRatingOfMovie}
+          >
+            Show Average Rating of a Movie
+          </button>
+        </div>
+        <div>
+          <LogoutButton />
+        </div>
       </div>
       {showAddAudience && (
         <section className="d-grid vw-100 vh-100 justify-content-center align-content-center ">
@@ -558,12 +577,10 @@ export function ManagerPage() {
                 <div className="card" key={index}>
                   <div className="card-body">
                     <p className="card-text">
-                      {" "}
                       <b>Movie Id: </b> {movie.movie_id}
                     </p>
 
                     <p className="card-text">
-                      {" "}
                       <b>Movie Name: </b>
                       {movie.movie_name}
                     </p>
@@ -612,9 +629,20 @@ export function ManagerPage() {
 
             <div className="card">
               <div className="card-body">
-                <p className="card-text">{averaRatingOfMovie.movie_id}</p>
-                <p className="card-text">{averaRatingOfMovie.movie_name}</p>
-                <p className="card-text">{averaRatingOfMovie.overall_rating}</p>
+                <p className="card-text">
+                  <b>Movie Id: </b>
+                  {averaRatingOfMovie.movie_id}
+                </p>
+                <p className="card-text">
+                  <b>Movie Name: </b>
+                  {averaRatingOfMovie.movie_name}
+                </p>
+                <p className="card-text">
+                  <b>Average Rating: </b>
+                  {averaRatingOfMovie.overall_rating
+                    ? averaRatingOfMovie.overall_rating
+                    : "This movie hasn't been rated yet"}
+                </p>
               </div>
             </div>
           </div>

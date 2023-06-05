@@ -9,7 +9,7 @@ export function LogoutButton() {
   return (
     <button
       onClick={logOut}
-      className="btn btn-primary d-block position-absolute top-0 end-0 mt-3 me-3"
+      className="btn btn-primary d-block position-absolute top-0 end-0 mt-6 me-3"
     >
       Logout
     </button>
