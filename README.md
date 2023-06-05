@@ -6,8 +6,8 @@ This repository contains the frontend code for the MovieDB application. It provi
 
 To run the MovieDB-FE project, you need to have the following prerequisites installed:
 
-- [Node.js](https://nodejs.org) (version X.X.X or higher)
-- [npm](https://www.npmjs.com/) (version X.X.X or higher)
+- [Node.js](https://nodejs.org)
+- [npm](https://www.npmjs.com/)
 
 ## Installation
 
