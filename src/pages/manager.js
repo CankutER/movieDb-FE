@@ -21,6 +21,7 @@ export function ManagerPage() {
   const [averaRatingOfMovie, setAveraRatingOfMovie] = useState({});
   const [showAverageRatingOfMovie, setShowAverageRatingOfMovie] =
     useState(false);
+  const [isClicked, setIsClicked] = useState({});
 
   useEffect(() => {
     console.log("AAA ", loginInfo);
@@ -44,27 +45,51 @@ export function ManagerPage() {
 
   const handleShowAddAudience = () => {
     setShowAddAudience(!showAddAudience);
+    setFormState({});
+    setIsClicked({ ...isClicked, addAudience: !isClicked.addAudience });
   };
 
   const handleShowDeleteAudience = () => {
     setShowDeleteAudience(!showDeleteAudience);
+    setFormState({});
+    setIsClicked({ ...isClicked, deleteAudience: !isClicked.deleteAudience });
   };
 
   const handleShowPlatform = () => {
     setShowUpdatePlatform(!showUpdatePlatform);
+    setFormState({});
+    setIsClicked({ ...isClicked, updatePlatform: !isClicked.updatePlatform });
   };
 
   const handleShowRatingsOfAudience = () => {
     setShowRatingsOfAudience(!showRatingsOfAudience);
+    setRatingsOfAudience([]);
+    setFormState({});
+    setIsClicked({
+      ...isClicked,
+      ratingsOfAudienceButton: !isClicked.ratingsOfAudienceButton,
+    });
   };
 
   const handleShowMoviesOfDirector = () => {
     setShowMoviesOfDirector(!showMoviesOfDirector);
+    setIsClicked({
+      ...isClicked,
+      moviesOfDirector: !isClicked.moviesOfDirector,
+    });
+    setMoviesOfDirector([]);
+    setFormState({});
   };
 
   const handleShowAverageRatingOfMovie = () => {
     setShowAverageRatingOfMovie(!showAverageRatingOfMovie);
+    setFormState({});
+    setIsClicked({
+      ...isClicked,
+      averageRatingOfMovieButton: !isClicked.averageRatingOfMovieButton,
+    });
   };
+
   const handleAddAudience = async (e) => {
     try {
       e.preventDefault();
@@ -122,7 +147,7 @@ export function ManagerPage() {
         .catch((response) => {
           throw new Error(response.response.data);
         });
-
+      setFormState({});
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -133,6 +158,10 @@ export function ManagerPage() {
 
   const handleFetchDirectors = async () => {
     try {
+      setIsClicked({
+        ...isClicked,
+        showDirectorsButton: !isClicked.showDirectorsButton,
+      });
       setIsLoading(true);
       const response = await axios
         .get(`${API_URL}/showDirectors`)
@@ -176,12 +205,13 @@ export function ManagerPage() {
       e.preventDefault();
       setIsLoading(true);
       const id = formState.username;
+      console.log("id", id);
       const response = await axios
         .get(`${API_URL}/showMovies?username=${id}`)
         .catch((response) => {
           throw new Error(response.response.data);
         });
-
+      console.log("response bastirmaca ", response);
       setMoviesOfDirector(response.data);
       setIsLoading(false);
     } catch (err) {
@@ -217,43 +247,71 @@ export function ManagerPage() {
     <div>
       <div className={`d-flex`}>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.addAudience
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowAddAudience}
         >
           Add Audience
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.deleteAudience
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowDeleteAudience}
         >
           Delete Audience
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.updatePlatform
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowPlatform}
         >
           Update Platform Id
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.showDirectorsButton
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleFetchDirectors}
         >
           Show Directors
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.ratingsOfAudienceButton
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowRatingsOfAudience}
         >
           Show Ratings of a Audience
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.moviesOfDirector
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowMoviesOfDirector}
         >
           Show Movies of a Director
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.averageRatingOfMovieButton
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowAverageRatingOfMovie}
         >
           Show Average Rating of a Movie
@@ -265,7 +323,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Add Audience</h3>
             <form onSubmit={handleAddAudience}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -339,7 +397,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Delete Audience</h3>
             <form onSubmit={handleDeleteAudience}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -371,7 +429,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Update Platform Id</h3>
             <form onSubmit={handleUpdatePlatformId}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -411,16 +469,19 @@ export function ManagerPage() {
       )}
       {showDirectors &&
         allDirectors?.map((director, index) => (
-          <div className="card" key={index}>
-            <div className="card-body">
-              <h5 className="card-title">username: {director.username}</h5>
-              <p className="card-text">
-                name: {director.firstName} {director.lastName}
-              </p>
-              <p className="card-text">nation: {director.nation}</p>
-              <p className="card-text">platform Id: {director.platform_id}</p>
+          <>
+            <h3>Show Directors</h3>
+            <div className="card" key={index}>
+              <div className="card-body">
+                <h5 className="card-title">username: {director.username}</h5>
+                <p className="card-text">
+                  name: {director.firstName} {director.lastName}
+                </p>
+                <p className="card-text">nation: {director.nation}</p>
+                <p className="card-text">platform Id: {director.platform_id}</p>
+              </div>
             </div>
-          </div>
+          </>
         ))}
       {showRatingsOfAudience && (
         <section className="d-grid vw-100 vh-100 justify-content-center align-content-center ">
@@ -428,7 +489,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Show Ratings of an Audience</h3>
             <form onSubmit={handleRatingsOfAudience}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -469,7 +530,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Show Movies of a Director</h3>
             <form onSubmit={handleMoviesOfDirector}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
@@ -496,9 +557,22 @@ export function ManagerPage() {
               {moviesOfDirector?.map((movie, index) => (
                 <div className="card" key={index}>
                   <div className="card-body">
-                    <p className="card-text">{movie.id}</p>
-                    <p className="card-text">{movie.name}</p>
-                    <p className="card-text">{movie.overall_rating}</p>
+                    <p className="card-text">
+                      {" "}
+                      <b>Movie Id: </b> {movie.movie_id}
+                    </p>
+
+                    <p className="card-text">
+                      {" "}
+                      <b>Movie Name: </b>
+                      {movie.movie_name}
+                    </p>
+                    <p className="card-text">
+                      <b>Overall Rating: </b>
+                      {movie.movie_overall_rating
+                        ? movie.movie_overall_rating
+                        : "no rating yet"}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -512,7 +586,7 @@ export function ManagerPage() {
             <div className="text-center warning-container text-danger">
               <span className="warning text-danger">{warning}</span>
             </div>
-
+            <h3>Show Average Rating of a Movie</h3>
             <form onSubmit={handleAverageRatingOfMovie}>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">

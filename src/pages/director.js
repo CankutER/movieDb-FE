@@ -11,6 +11,7 @@ export function DirectorPage() {
   const [formState, setFormState] = useState({});
   const [showAddMovie, setShowAddMovie] = useState(false);
   const [showAddPrecessor, setShowAddPrecessor] = useState(false);
+  const [isClicked, setIsClicked] = useState({});
 
   useEffect(() => {
     console.log("AAA ", loginInfo);
@@ -24,7 +25,7 @@ export function DirectorPage() {
   useEffect(() => {
     const warningTime = setTimeout(() => {
       setWarning("");
-    }, 1500);
+    }, 2500);
     return () => clearTimeout(warningTime);
   }, [warning]);
 
@@ -34,10 +35,20 @@ export function DirectorPage() {
 
   const handleShowAddMovie = () => {
     setShowAddMovie(!showAddMovie);
+    setFormState({});
+    setIsClicked({
+      ...isClicked,
+      addMovieButton: !isClicked.addMovieButton,
+    });
   };
 
   const handleShowAddPrecessor = () => {
     setShowAddPrecessor(!showAddPrecessor);
+    setFormState({});
+    setIsClicked({
+      ...isClicked,
+      addPrecessorButton: !isClicked.addPrecessorButton,
+    });
   };
 
   const handleAddMovie = async (e) => {
@@ -51,14 +62,17 @@ export function DirectorPage() {
           movieId: formState.movie_id,
           movieName: formState.movie_name,
           theatreId: formState.theatre_id,
-          timeSlot: formState.time_slot,
-          duration: formState.duration,
+          timeSlot: Number(formState.time_slot),
+          duration: Number(formState.duration),
           date: formState.date,
         })
         .catch((response) => {
           throw new Error(response.response.data);
         });
+      setWarning("Movie created");
+
       console.log("add movie ", response.data);
+      setFormState({});
       setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
@@ -93,13 +107,21 @@ export function DirectorPage() {
     <div>
       <div className={`d-flex`}>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.addMovieButton
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowAddMovie}
         >
           Add Movie
         </button>
         <button
-          className={`btn btn-primary mx-auto`}
+          className={
+            !isClicked.addPrecessorButton
+              ? "btn btn-primary mx-auto"
+              : "btn btn-secondary mx-auto"
+          }
           onClick={handleShowAddPrecessor}
         >
           Add Predecessor
